@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLESS + Reality 配置全攻略 - 极客教程</title>
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --bg: #f9fafb;
+            --code-bg: #111827;
+            --text-main: #1f2937;
+            --accent-blue: #3b82f6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.7; }
+
+        header { background: #fff; padding: 1rem 5%; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { color: var(--primary); font-weight: bold; text-decoration: none; font-size: 1.1rem; }
+
+        .container { max-width: 850px; margin: 2rem auto; background: #fff; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        
+        .badge { background: #fee2e2; color: #ef4444; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 1rem; display: inline-block; }
+        
+        h1 { font-size: 2rem; margin-bottom: 1.5rem; color: #111; letter-spacing: -0.025em; }
+        h2 { margin: 2rem 0 1rem; font-size: 1.4rem; color: var(--accent-blue); display: flex; align-items: center; }
+        h2::before { content: "◈"; margin-right: 10px; }
+
+        /* 终端代码 */
+        .terminal { background: var(--code-bg); color: #10b981; padding: 1.2rem; border-radius: 10px; font-family: 'Fira Code', monospace; font-size: 0.9rem; margin: 1rem 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .comment { color: #6b7280; }
+
+        /* 参数表格 */
+        .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+        .config-table th { background: #f3f4f6; text-align: left; padding: 12px; border: 1px solid #e5e7eb; }
+        .config-table td { padding: 12px; border: 1px solid #e5e7eb; }
+        .highlight { color: #ef4444; font-weight: bold; }
+
+        .note-box { background: #eff6ff; border-left: 4px solid var(--accent-blue); padding: 1.2rem; border-radius: 8px; margin: 2rem 0; }
+
+        footer { text-align: center; padding: 4rem 0; color: #9ca3af; font-size: 0.85rem; }
+
+        @media (max-width: 600px) { .container { padding: 1.5rem; margin: 10px; } h1 { font-size: 1.6rem; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">GEEK_REALITY</a>
+        <nav style="font-size: 0.8rem; color: #6b7280;">高级安全协议</nav>
+    </header>
+
+    <main class="container">
+        <span class="badge">无需域名方案</span>
+        <h1>VLESS + Reality 详细配置教程</h1>
+        
+        <p>Reality 协议通过模拟真实网站（Dest）的 TLS 握手特征，彻底解决了域名被墙或被识别的问题。它是目前最推荐的配置方式。</p>
+
+        <h2>第一步：生成密钥对</h2>
+        <p>在配置面板前，先在 SSH 终端中生成一对用于加密的公钥和私钥：</p>
+        <div class="terminal">
+            <span class="comment"># 输入以下命令获取密钥</span><br>
+            s-ui x25519
+        </div>
+        <p>你将看到 <b>Private Key</b> 和 <b>Public Key</b>。请把它们记录在记事本里，下一步要用。</p>
+
+        <h2>第二步：面板入站设置</h2>
+        <p>登录 s-ui 面板，点击“添加入站”，按照下表进行精确配置：</p>
+        
+        <table class="config-table">
+            <thead>
+                <tr><th>配置项</th><th>推荐设置值</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>协议 (Protocol)</td><td><span class="highlight">vless</span></td></tr>
+                <tr><td>监听端口 (Port)</td><td><span class="highlight">443</span> (必须，模拟真实 HTTPS)</td></tr>
+                <tr><td>传输 (Transport)</td><td>tcp</td></tr>
+                <tr><td>安全 (Security)</td><td><span class="highlight">reality</span></td></tr>
+                <tr><td>流控 (Flow)</td><td>xtls-rprx-vision</td></tr>
+                <tr><td>目标网站 (Dest)</td><td>://microsoft.com</td></tr>
+                <tr><td>SNI</td><td>://microsoft.com</td></tr>
+                <tr><td>私钥 (PrivateKey)</td><td>填入刚才生成的 Private Key</td></tr>
+                <tr><td>Short ID</td><td>填写 8-16 位随机数字字母 (如 0123456789abcdef)</td></tr>
+            </tbody>
+        </table>
+
+        <div class="note-box">
+            <strong>💡 目标网站 (Dest) 选择技巧：</strong><br>
+            建议选择在你服务器当地访问延迟低、且拥有正式证书的国外大站。常用：<code>://yahoo.com</code>, <code>://microsoft.com</code>, <code>swisspost.ch:443</code>。
+        </div>
+
+        <h2>第三步：客户端连接配置</h2>
+        <p>在手机或电脑客户端添加节点时，除了服务器 IP 和端口，请务必检查以下关键点：</p>
+        <ul>
+            <li><b>公钥 (PublicKey)：</b> 填入刚才生成的 <span class="highlight">Public Key</span>（注意：不是面板填的私钥）。</li>
+            <li><b>SNI：</b> 必须与面板填写的 Dest 域名一致（如 ://microsoft.com）。</li>
+            <li><b>指纹 (Fingerprint)：</b> 选择 <code>chrome</code>。</li>
+            <li><b>SpiderX：</b> 保持默认或留空。</li>
+        </ul>
+
+        <h2>第四步：排查常见问题</h2>
+        <p>如果连接不上，请按顺序检查：</p>
+        <ol style="padding-left: 1.5rem; margin-top: 1rem;">
+            <li>服务器 <b>443 端口</b> 是否在云平台安全组和 UFW 防火墙中开放？</li>
+            <li>系统时间是否同步？（Reality 对时间误差要求极高）</li>
+            <li>客户端是否支持 <b>xtls-rprx-vision</b> 流控？</li>
+        </ol>
+
+    </main>
+
+    <footer>
+        &copy; 2024 极客教程 - 掌握核心科技
+    </footer>
+
+</body>
+</html>
