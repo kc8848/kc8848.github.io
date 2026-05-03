@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>极客教程 - 专业 Linux 运维学习导航</title>
+    <title>极客运维教程网 - 一站式 Linux 学习导航</title>
     <style>
         :root {
             --primary: #2563eb;
+            --primary-hover: #1d4ed8;
             --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-light: #64748b;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-        body { background-color: var(--bg); color: var(--text-dark); line-height: 1.6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, system-ui, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
 
-        /* 导航栏 */
+        /* 玻璃拟态导航栏 */
         header {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             padding: 1rem 5%;
             display: flex;
@@ -28,93 +30,107 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: -1px; }
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: -1px; }
 
-        /* 英雄区 */
+        /* 英雄区：搜索核心 */
         .hero {
-            padding: 5rem 5% 3rem;
+            padding: 4rem 5% 3rem;
             text-align: center;
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(to bottom, #fff, var(--bg));
         }
 
-        .hero h1 { font-size: 2.8rem; margin-bottom: 1.5rem; letter-spacing: -1px; }
-        .hero p { color: var(--text-light); font-size: 1.2rem; margin-bottom: 2.5rem; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; letter-spacing: -1.5px; color: #111; }
+        .hero p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem; }
 
-        .search-container {
-            max-width: 600px;
+        .search-box {
+            max-width: 700px;
             margin: 0 auto;
             position: relative;
         }
 
-        #mainSearch {
+        #globalSearch {
             width: 100%;
             padding: 1.2rem 1.5rem;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--border);
             border-radius: 50px;
             font-size: 1.1rem;
             outline: none;
             transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
 
-        #mainSearch:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        #globalSearch:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+
+        /* 分类筛选器 */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
 
         /* 教程网格 */
-        .main-content { max-width: 1200px; margin: 3rem auto; padding: 0 1.5rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
         
-        .section-header { margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; }
-        .section-header h2 { font-size: 1.5rem; }
-
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
 
         /* 教程卡片 */
         .card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: var(--radius);
+            padding: 1.5rem;
             text-decoration: none;
             color: inherit;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
             border-color: var(--primary);
         }
 
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            background: #eff6ff;
-            color: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
+        .card-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .card-tag { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem; letter-spacing: 1px; }
+        .card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-main); }
+        .card p { font-size: 0.9rem; color: var(--text-muted); flex-grow: 1; }
+        
+        /* 无结果提示 */
+        #noResults { display: none; text-align: center; padding: 4rem; color: var(--text-muted); font-size: 1.1rem; }
 
-        .card-tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem; }
-        .card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
-        .card p { font-size: 0.95rem; color: var(--text-light); flex-grow: 1; }
-
-        /* 底部 */
-        footer { text-align: center; padding: 5rem 0; color: var(--text-light); font-size: 0.9rem; }
+        footer { text-align: center; padding: 4rem 0; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 4rem; }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
+            .hero h1 { font-size: 1.8rem; }
             .grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -126,74 +142,138 @@
     </header>
 
     <section class="hero">
-        <h1>探索 Linux 的深度与广度</h1>
-        <p>结构化的教程，助你从小白晋升为资深运维工程师</p>
-        <div class="search-container">
-            <input type="text" id="mainSearch" placeholder="搜索教程：如 'ufw', '性能测试', '命令'...">
+        <h1>运维进阶，从这里开始</h1>
+        <p>搜集并整理了 Linux、Docker 及各类面板的实战部署教程</p>
+        <div class="search-box">
+            <input type="text" id="globalSearch" placeholder="输入关键词，如 'reality', 'docker', 'ufw'...">
+        </div>
+        <div class="filters">
+            <button class="filter-btn active" data-type="all">全部教程</button>
+            <button class="filter-btn" data-type="基础">基础运维</button>
+            <button class="filter-btn" data-type="安全">安全防护</button>
+            <button class="filter-btn" data-type="面板">面板管理</button>
+            <button class="filter-btn" data-type="进阶">进阶协议</button>
         </div>
     </section>
 
-    <main class="main-content">
-        <div class="section-header">
-            <h2>全站教程指引</h2>
-        </div>
-
+    <main class="container">
+        <div id="noResults">未找到相关教程，换个词试试？</div>
         <div class="grid" id="tutorialGrid">
-            <!-- 教程 1 -->
-            <a href="ufw-tutorial.html" class="card" data-title="ufw 防火墙 安全设置">
+            
+            <!-- 教程卡片：基础运维 (升级 + Docker) -->
+            <a href="linux-upgrade-tutorial.html" class="card" data-type="基础" data-search="升级 更新 apt yum linux系统">
+                <div class="card-icon">📦</div>
+                <div class="card-tag">基础运维</div>
+                <h3>Linux 系统升级指南</h3>
+                <p>详细讲解 Ubuntu/Debian 及 CentOS 下的安全更新与版本升级命令。</p>
+            </a>
+
+            <a href="docker-tutorial.html" class="card" data-type="基础" data-search="docker 容器 镜像 卸载小白">
+                <div class="card-icon">🐳</div>
+                <div class="card-tag">基础运维</div>
+                <h3>Docker 安装与卸载</h3>
+                <p>容器化技术入门，包含国内镜像加速配置及彻底清理教程。</p>
+            </a>
+
+            <!-- 教程卡片：安全防护 (UFW + SSL) -->
+            <a href="ufw-tutorial.html" class="card" data-type="安全" data-search="ufw 防火墙 安全 端口">
                 <div class="card-icon">🛡️</div>
                 <div class="card-tag">安全防护</div>
                 <h3>UFW 防火墙配置</h3>
-                <p>Ubuntu/Debian 必备！简单易用的端口管理与安全策略指南。</p>
+                <p>保护你的 Linux 服务器，简单几步完成端口开关与访问控制。</p>
             </a>
 
-            <!-- 教程 2 -->
-            <a href="bench-sh-tutorial.html" class="card" data-title="bench.sh 性能测试 vps">
+            <a href="ssl-tutorial.html" class="card" data-type="安全" data-search="ssl acme 证书 申请 域名 https 通配符">
+                <div class="card-icon">🔒</div>
+                <div class="card-tag">安全防护</div>
+                <h3>acme.sh 通配符证书申请</h3>
+                <p>全自动申请并续期 SSL 证书，支持主流域名商 API 接入。</p>
+            </a>
+
+            <!-- 教程卡片：面板管理 (3x-ui + s-ui) -->
+            <a href="3x-ui-tutorial.html" class="card" data-type="面板" data-search="3x-ui x-ui 安装 卸载 安全">
+                <div class="card-icon">⚡</div>
+                <div class="card-tag">面板管理</div>
+                <h3>3x-ui 面板全教程</h3>
+                <p>支持多用户、多协议的现代化管理面板，包含安全端口配置说明。</p>
+            </a>
+
+            <a href="s-ui-tutorial.html" class="card" data-type="面板" data-search="s-ui 轻量 安装 卸载">
+                <div class="card-icon">⚙️</div>
+                <div class="card-tag">面板管理</div>
+                <h3>s-ui 轻量化面板</h3>
+                <p>为低配置服务器设计的简洁管理工具，稳定且高效。</p>
+            </a>
+
+            <!-- 教程卡片：进阶协议 -->
+            <a href="s-ui-vless-reality.html" class="card" data-type="进阶" data-search="reality vless bless 证书 伪装">
+                <div class="card-icon">💎</div>
+                <div class="card-tag">进阶协议</div>
+                <h3>VLESS + Reality 配置</h3>
+                <p>深入详解 Reality 协议配置，实现无需域名的顶级流量伪装。</p>
+            </a>
+
+            <!-- 教程卡片：性能测试 -->
+            <a href="bench-sh-tutorial.html" class="card" data-type="基础" data-search="bench 性能测试 vps 速度 io">
                 <div class="card-icon">🚀</div>
-                <div class="card-tag">性能工具</div>
-                <h3>Bench.sh 测试脚本</h3>
-                <p>一键查看 VPS 硬件信息、网络带宽及硬盘 I/O 性能。</p>
-            </a>
-
-            <!-- 教程 3 -->
-            <a href="linux-upgrade-tutorial.html" class="card" data-title="upgrade update 升级 更新系统">
-                <div class="card-icon">📦</div>
                 <div class="card-tag">基础运维</div>
-                <h3>系统升级命令</h3>
-                <p>掌握 apt/yum 不同发行版的软件更新与内核升级技巧。</p>
+                <h3>Bench.sh 性能测试</h3>
+                <p>一键检测 VPS 硬件配置、硬盘 I/O 及全球下载速度。</p>
             </a>
 
-            <!-- 教程 4 -->
-            <a href="linux-commands-all.html" class="card" data-title="linux命令大全 速查手册">
+            <a href="linux-commands-all.html" class="card" data-type="基础" data-search="命令大全 手册 linux指令">
                 <div class="card-icon">📚</div>
-                <div class="card-tag">参考手册</div>
+                <div class="card-tag">基础运维</div>
                 <h3>Linux 命令大全集</h3>
-                <p>包含文件操作、网络工具、系统管理在内的全能速查库。</p>
+                <p>常用的 Linux 运维指令合集，支持快速分类检索。</p>
             </a>
+
         </div>
     </main>
 
     <footer>
-        &copy; 2024 极客教程网 - 致力于传播优质的开源技术内容
+        &copy; 2024 极客运维教程网 - 基于原生 HTML/CSS/JS 构建
     </footer>
 
     <script>
-        // 首页实时搜索功能
-        const searchInput = document.getElementById('mainSearch');
+        const searchInput = document.getElementById('globalSearch');
+        const filterBtns = document.querySelectorAll('.filter-btn');
         const cards = document.querySelectorAll('.card');
+        const noResults = document.getElementById('noResults');
 
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            
+        function filterTutorials() {
+            const query = searchInput.value.toLowerCase();
+            const activeType = document.querySelector('.filter-btn.active').dataset.type;
+            let count = 0;
+
             cards.forEach(card => {
-                const title = card.getAttribute('data-title').toLowerCase();
-                const text = card.innerText.toLowerCase();
-                
-                if (title.includes(query) || text.includes(query)) {
+                const searchTerms = card.dataset.search.toLowerCase();
+                const cardContent = card.innerText.toLowerCase();
+                const cardType = card.dataset.type;
+
+                const matchesSearch = searchTerms.includes(query) || cardContent.includes(query);
+                const matchesType = activeType === 'all' || cardType === activeType;
+
+                if (matchesSearch && matchesType) {
                     card.style.display = 'flex';
+                    count++;
                 } else {
                     card.style.display = 'none';
                 }
+            });
+
+            noResults.style.display = count === 0 ? 'block' : 'none';
+        }
+
+        // 搜索监听
+        searchInput.addEventListener('input', filterTutorials);
+
+        // 分类点击监听
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterTutorials();
             });
         });
     </script>
