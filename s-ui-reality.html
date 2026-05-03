@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>s-ui Reality (Bless) 配置教程 - 极客教程</title>
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --bg: #fdfdfd;
+            --text-main: #1f2937;
+            --code-bg: #111827;
+            --step-bg: #f8fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.7; }
+
+        header { background: #fff; padding: 1rem 5%; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { color: var(--primary); font-weight: bold; text-decoration: none; font-size: 1.1rem; }
+
+        .container { max-width: 800px; margin: 2rem auto; background: #fff; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+        
+        .badge { background: #000; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 1rem; display: inline-block; }
+        
+        h1 { font-size: 1.8rem; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        h2 { margin: 2rem 0 1rem; font-size: 1.3rem; color: #111; border-left: 4px solid var(--primary); padding-left: 15px; }
+
+        .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+        .config-table td { padding: 12px; border: 1px solid #e5e7eb; }
+        .config-table td:first-child { background: #f9fafb; font-weight: 600; width: 30%; }
+
+        .terminal { background: var(--code-bg); color: #10b981; padding: 1rem; border-radius: 8px; font-family: monospace; margin: 1rem 0; font-size: 0.9rem; }
+
+        .pro-tip { background: #ecfdf5; border: 1px solid #d1fae5; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; color: #065f46; }
+
+        footer { text-align: center; padding: 3rem; color: #9ca3af; font-size: 0.85rem; }
+
+        @media (max-width: 600px) { .container { padding: 1.5rem; margin: 10px; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">GEEK_REALITY</a>
+        <div style="font-size: 0.8rem;">高级协议配置</div>
+    </header>
+
+    <main class="container">
+        <span class="badge">VLESS + Reality</span>
+        <h1>Reality (Bless) 核心配置指南</h1>
+        
+        <p>Reality 协议不需要你自己购买域名或申请证书。它通过“真实现身”技术，借用他人的合规域名（如 Microsoft 或 Samsung）来通过防火墙检测。</p>
+
+        <h2>1. 获取密钥 (Keys)</h2>
+        <p>在面板配置 Reality 之前，你需要生成一对公钥和私钥。在服务器 SSH 终端输入：</p>
+        <div class="terminal">
+            s-ui x25519
+        </div>
+        <p>你会得到 <b>Private Key</b> (私钥) 和 <b>Public Key</b> (公钥)。请妥善保存。</p>
+
+        <h2>2. 面板参数设置</h2>
+        <p>在 s-ui 面板点击“添加入站列表”，选择 <b>VLESS</b> 协议，并开启 <b>Reality</b> 开关：</p>
+        
+        <table class="config-table">
+            <tr><td>端口</td><td>推荐使用 443 (模拟真实 HTTPS)</td></tr>
+            <tr><td>传输配置</td><td>选择 <b>TCP</b></td></tr>
+            <tr><td>安全传输 (TLS)</td><td>选择 <b>Reality</b></td></tr>
+            <tr><td>目标网站 (Dest)</td><td>://microsoft.com (或本地访问顺畅的国外大厂)</td></tr>
+            <tr><td>服务器名称 (SNI)</td><td>://microsoft.com</td></tr>
+            <tr><td>Short ID</td><td>随机填写 8-16 位 16 进制字符 (如: 0123456789abcdef)</td></tr>
+            <tr><td>Private Key</td><td>填入刚才生成的 <b>私钥</b></td></tr>
+        </table>
+
+        <h2>3. 关键点：什么是 Bless？</h2>
+        <p>在配置项中，<b>Bless</b>（在某些版本面板中称为“流控”或“Flow”）通常建议选择：</p>
+        <div class="pro-tip">
+            <b>xtls-rprx-vision</b><br>
+            这是目前最推荐的选择，它能有效消除 TLS 在 TLS 环境中的特征，显著提升隐蔽性。
+        </div>
+
+        <h2>4. 客户端配置注意</h2>
+        <ul style="padding-left: 1.5rem;">
+            <li><b>公钥 (Public Key)：</b> 客户端必须填入刚才生成的公钥（不是服务器填的那个私钥）。</li>
+            <li><b>Fingerprint：</b> 选择 <b>chrome</b> 或 <b>firefox</b>。</li>
+            <li><b>SpiderX：</b> 保持默认或留空即可。</li>
+        </ul>
+
+    </main>
+
+    <footer>
+        &copy; 2024 极客教程 - 关注最前沿的网络技术
+    </footer>
+
+</body>
+</html>
