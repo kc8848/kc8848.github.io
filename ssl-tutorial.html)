@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>acme.sh 申请通配符 SSL 证书教程 - 极客教程</title>
+    <style>
+        :root {
+            --primary-color: #0ea5e9;
+            --bg: #f8fafc;
+            --code-bg: #0f172a;
+            --text-main: #334155;
+            --accent-gold: #fbbf24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', system-ui, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.8; }
+
+        header { background: #fff; padding: 1rem 5%; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .logo { color: var(--primary-color); font-weight: 800; text-decoration: none; font-size: 1.2rem; }
+
+        .container { max-width: 850px; margin: 2rem auto; background: #fff; padding: 2.5rem; border-radius: 16px; border: 1px solid #f1f5f9; }
+        
+        .badge { background: #06b6d4; color: white; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block; }
+        
+        h1 { font-size: 2rem; margin-bottom: 1rem; color: #0f172a; }
+        h2 { margin: 2.5rem 0 1rem; padding-left: 12px; border-left: 4px solid var(--primary-color); color: #1e293b; font-size: 1.4rem; }
+        
+        /* 终端代码风格 */
+        .terminal { background: var(--code-bg); color: #e2e8f0; padding: 1.2rem; border-radius: 10px; font-family: 'Fira Code', monospace; font-size: 0.9rem; margin: 1.2rem 0; overflow-x: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .cmd { color: #38bdf8; } 
+        .var { color: #fb7185; }
+        .comment { color: #64748b; font-style: italic; }
+
+        .info-box { background: #f0f9ff; border: 1px solid #bae6fd; padding: 1.2rem; border-radius: 8px; margin: 1.5rem 0; font-size: 0.95rem; }
+        .info-box b { color: #0369a1; }
+
+        .tip-step { display: flex; align-items: flex-start; margin-bottom: 1.5rem; gap: 15px; }
+        .step-num { background: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.8rem; margin-top: 4px; }
+
+        footer { text-align: center; padding: 3rem; color: #94a3b8; font-size: 0.85rem; }
+
+        @media (max-width: 600px) { .container { padding: 1.5rem; margin: 1rem; } h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">GEEK_SSL</a>
+        <div style="font-size: 0.8rem; color: #64748b;">自动化 HTTPS 指南</div>
+    </header>
+
+    <main class="container">
+        <span class="badge">HTTPS 自动化</span>
+        <h1>acme.sh 轻松申请通配符证书</h1>
+        
+        <p>通配符证书（Wildcard Certificate）可以同时保护 <code>example.com</code> 及其所有子域名（如 <code>://example.com</code>）。使用 <strong>acme.sh</strong>，你可以实现证书的自动申请、自动续期和自动部署。</p>
+
+        <div class="info-box">
+            <b>准备工作：</b> 申请通配符证书必须使用 <b>DNS 验证</b> 模式。你需要准备好域名解析商（如阿里云、腾讯云、Cloudflare）的 API Key。
+        </div>
+
+        <h2>1. 安装 acme.sh</h2>
+        <p>执行以下命令安装脚本，将 <code>my@example.com</code> 换成你自己的邮箱：</p>
+        <div class="terminal">
+            <span class="cmd">curl</span> https://acme.sh | sh -s email=<span class="var">my@example.com</span>
+        </div>
+
+        <h2>2. 设置 DNS API 密钥</h2>
+        <p>以 <b>阿里云</b> 为例，你需要获取 <code>AccessKey ID</code> 和 <code>AccessKey Secret</code>，然后在终端导入变量：</p>
+        <div class="terminal">
+            <span class="comment"># 导入 API 密钥（acme.sh 会加密保存到配置文件，以后自动使用）</span><br>
+            <span class="cmd">export</span> Ali_Key="<span class="var">你的AccessKeyID</span>"<br>
+            <span class="cmd">export</span> Ali_Secret="<span class="var">你的AccessKeySecret</span>"
+        </div>
+        <p style="font-size: 0.85rem; color: #64748b;">* 如果是 Cloudflare，变量名为 <code>CF_Key</code> 和 <code>CF_Email</code>。</p>
+
+        <h2>3. 申请通配符证书</h2>
+        <p>运行以下命令开始申请。此步骤会自动在你的域名下添加一条 TXT 解析记录进行验证：</p>
+        <div class="terminal">
+            <span class="cmd">acme.sh</span> --issue --dns dns_ali -d <span class="var">example.com</span> -d <span class="var">*.example.com</span>
+        </div>
+        <p>申请成功后，证书文件会保存在 <code>~/.acme.sh/://example.com</code> 目录下。</p>
+
+        <h2>4. 部署证书到 Nginx</h2>
+        <p><b>切记：</b> 不要直接修改 <code>.acme.sh</code> 目录下的文件，应使用命令将其“安装”到指定位置：</p>
+        <div class="terminal">
+            <span class="cmd">acme.sh</span> --install-cert -d <span class="var">example.com</span> \<br>
+            --key-file       /etc/nginx/ssl/key.pem  \<br>
+            --fullchain-file /etc/nginx/ssl/cert.pem \<br>
+            --reloadcmd     "<span class="cmd">service nginx force-reload</span>"
+        </div>
+
+        <h2>5. 自动续期</h2>
+        <p>acme.sh 安装时已自动添加了 <b>Crontab 定时任务</b>。证书到期前 30 天，脚本会自动运行上述步骤进行续期，你无需任何干预。你可以通过以下命令查看任务：</p>
+        <div class="terminal">
+            <span class="cmd">crontab</span> -l
+        </div>
+
+    </main>
+
+    <footer>
+        &copy; 2024 极客教程 - 让每一个站点都拥有安全加密
+    </footer>
+
+</body>
+</html>
