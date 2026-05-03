@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极客教程 - 探索编程的乐趣</title>
+    <style>
+        /* 基础样式变量 */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        header {
+            background: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        nav a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* 英雄区 (Hero Section) */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px 0 0 50px;
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 0.8rem 2rem;
+            border: none;
+            background: #1e40af;
+            color: white;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        /* 教程分类网格 */
+        .container {
+            padding: 3rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 160px;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #9ca3af;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-tag {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            background: #dbeafe;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* 页脚 */
+        footer {
+            background: #111827;
+            color: #9ca3af;
+            padding: 3rem 5%;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            nav { display: none; } /* 手机端隐藏菜单，可根据需要改造成汉堡菜单 */
+            .hero h1 { font-size: 1.8rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">极客教程</a>
+        <nav>
+            <a href="#">首页</a>
+            <a href="#">分类</a>
+            <a href="#">专题</a>
+            <a href="#">关于</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>学无止境，从这里开始</h1>
+        <p>提供系统、专业、完全免费的中文开发教程</p>
+        <div class="search-bar">
+            <input type="text" placeholder="搜索你感兴趣的教程... (如 Python, CSS)">
+            <button>搜索</button>
+        </div>
+    </section>
+
+    <main class="container">
+        <h2 class="section-title">热门教程</h2>
+        <div class="grid">
+            <!-- 教程卡片 1 -->
+            <article class="card">
+                <div class="card-img">HTML5 & CSS3</div>
+                <div class="card-content">
+                    <span class="card-tag">前端开发</span>
+                    <a href="#" class="card-title">零基础网页制作实战</a>
+                    <p class="card-desc">从最基础的标签开始，一步步带你构建属于自己的响应式网站。</p>
+                </div>
+            </article>
+
+            <!-- 教程卡片 2 -->
+            <article class="card">
+                <div class="card-img">JavaScript</div>
+                <div class="card-content">
+                    <span class="card-tag">前端开发</span>
+                    <a href="#" class="card-title">现代 JS 入门精要</a>
+                    <p class="card-desc">深入浅出讲解 ES6+ 新特性，掌握前端开发的灵魂语言。</p>
+                </div>
+            </article>
+
+            <!-- 教程卡片 3 -->
+            <article class="card">
+                <div class="card-img">Python</div>
+                <div class="card-content">
+                    <span class="card-tag">后端开发</span>
+                    <a href="#" class="card-title">Python 自动化办公</a>
+                    <p class="card-desc">学会用 Python 处理 Excel 和网页爬虫，让工作效率翻倍。</p>
+                </div>
+            </article>
+
+            <!-- 教程卡片 4 -->
+            <article class="card">
+                <div class="card-img">UI Design</div>
+                <div class="card-content">
+                    <span class="card-tag">设计</span>
+                    <a href="#" class="card-title">Figma 界面设计指南</a>
+                    <p class="card-desc">从零开始学习现代 UI 设计流程，打造高颜值的产品界面。</p>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 极客教程网. Built with ❤️ for Learners.</p>
+    </footer>
+
+</body>
+</html>
