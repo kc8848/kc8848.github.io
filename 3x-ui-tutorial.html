@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3x-ui 面板安装与安全配置教程 - 极客教程</title>
+    <style>
+        :root {
+            --primary-color: #6366f1; /* 靛蓝色 */
+            --bg: #fdfeff;
+            --code-bg: #111827;
+            --text-main: #374151;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', system-ui, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.8; }
+
+        header { background: #fff; padding: 1rem 5%; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .logo { color: var(--primary-color); font-weight: 800; text-decoration: none; font-size: 1.2rem; }
+
+        .container { max-width: 850px; margin: 2rem auto; background: #fff; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+        
+        .badge { background: #eef2ff; color: var(--primary-color); padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 15px; display: inline-block; }
+        
+        h1 { font-size: 2.2rem; margin-bottom: 1rem; color: #111827; letter-spacing: -1px; }
+        h2 { margin: 2.5rem 0 1rem; font-size: 1.5rem; color: #1e293b; display: flex; align-items: center; }
+        h2::before { content: "⚡"; margin-right: 10px; }
+        
+        /* 代码块 */
+        .terminal { background: var(--code-bg); color: #e5e7eb; padding: 1.2rem; border-radius: 12px; font-family: 'Fira Code', monospace; font-size: 0.9rem; margin: 1.2rem 0; position: relative; border: 1px solid #374151; }
+        .cmd { color: var(--success); }
+        .comment { color: #9ca3af; }
+
+        /* 警告框 */
+        .alert { background: #fff1f2; border: 1px solid #ffe4e6; padding: 1.2rem; border-radius: 8px; margin: 1.5rem 0; }
+        .alert b { color: var(--danger); }
+
+        .step-list { margin-left: 1.5rem; margin-bottom: 1.5rem; }
+        .step-list li { margin-bottom: 0.5rem; }
+
+        footer { text-align: center; padding: 3rem; color: #94a3b8; font-size: 0.85rem; }
+
+        @media (max-width: 600px) { .container { padding: 1.5rem; margin: 10px; } h1 { font-size: 1.8rem; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">GEEK_3XUI</a>
+        <div style="font-size: 0.8rem; color: #64748b;">面板管理系列</div>
+    </header>
+
+    <main class="container">
+        <span class="badge">小白全教程</span>
+        <h1>3x-ui 面板安装、配置与卸载</h1>
+        
+        <p><strong>3x-ui</strong> 是一个支持多协议、多用户的后台管理面板，因其界面简洁和高性能而广受欢迎。本教程将带你从零开始搭建并完成安全设置。</p>
+
+        <h2>一、 一键安装脚本</h2>
+        <p>支持 Ubuntu、Debian 和 CentOS 系统。建议在全新的系统环境下运行：</p>
+        <div class="terminal">
+            <span class="comment"># 使用官方一键脚本</span><br>
+            <span class="cmd">bash</span> <(curl -Ls https://githubusercontent.com)
+        </div>
+
+        <h2>二、 初始化设置</h2>
+        <div class="alert">
+            <b>重要安全提示：</b> 安装完成后，脚本会要求你设置 <b>用户名</b>、<b>密码</b> 和 <b>端口</b>。
+            <br>1. 严禁使用默认端口 (2053)，请自定义一个 10000 以上的随机端口。
+            <br>2. 确保你的防火墙（如 UFW）已放行该端口。
+        </div>
+        <p>设置完成后，通过浏览器访问：<code>http://你的服务器IP:自定义端口</code></p>
+
+        <h2>三、 常用管理命令</h2>
+        <p>在 SSH 终端输入 <code>x-ui</code> 即可进入管理菜单，或直接使用以下快捷命令：</p>
+        <div class="terminal">
+            <span class="cmd">x-ui</span> <span class="comment"># 打开管理菜单</span><br>
+            <span class="cmd">x-ui start</span> <span class="comment"># 启动面板</span><br>
+            <span class="cmd">x-ui stop</span> <span class="comment"># 停止面板</span><br>
+            <span class="cmd">x-ui status</span> <span class="comment"># 查看运行状态</span>
+        </div>
+
+        <h2>四、 SSL 证书与安全配置</h2>
+        <ul class="step-list">
+            <li>建议结合本站的 <b>acme.sh 教程</b> 申请 SSL 证书。</li>
+            <li>在面板设置中开启 <b>HTTPS</b>，并填入证书路径。</li>
+            <li>建议开启 <b>面板根路径修改</b>，防止被扫描工具发现。</li>
+        </ul>
+
+        <h2>五、 彻底卸载</h2>
+        <p>如果你需要移除 3x-ui 及其所有配置，请执行：</p>
+        <div class="terminal">
+            <span class="cmd">x-ui uninstall</span>
+        </div>
+        <p>卸载后，建议手动清理可能残留的防火墙规则。</p>
+
+    </main>
+
+    <footer>
+        &copy; 2024 极客教程 - 高效、安全、专业的运维向导
+    </footer>
+
+</body>
+</html>
