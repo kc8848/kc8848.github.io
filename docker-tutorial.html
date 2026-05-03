@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker 安装与卸载小白教程 - 极客教程</title>
+    <style>
+        :root {
+            --primary-color: #2496ed; /* Docker 官方蓝 */
+            --bg: #f0f4f8;
+            --code-bg: #2d333b;
+            --text-main: #1c2128;
+            --accent-green: #2da44e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.8; }
+
+        header { background: #fff; padding: 1rem 5%; border-bottom: 1px solid #d0d7de; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .logo { color: var(--primary-color); font-weight: bold; text-decoration: none; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+
+        .container { max-width: 900px; margin: 2rem auto; background: #fff; padding: 3rem; border-radius: 12px; box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2); }
+        
+        .badge { background: var(--primary-color); color: white; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; vertical-align: middle; margin-right: 10px; }
+        
+        h1 { font-size: 2.2rem; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        h2 { margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #f0f1f2; color: #0969da; }
+        
+        .step-card { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+        .step-card h3 { margin-bottom: 1rem; font-size: 1.1rem; color: #24292f; }
+
+        /* 代码区 */
+        .terminal { background: var(--code-bg); color: #adbac7; padding: 1.2rem; border-radius: 6px; font-family: 'Consolas', monospace; position: relative; margin: 10px 0; overflow-x: auto; }
+        .terminal::before { content: "Terminal"; display: block; font-size: 0.7rem; color: #768390; margin-bottom: 8px; border-bottom: 1px solid #444c56; }
+        .cmd { color: #f47067; } /* 命令高亮 */
+        .comment { color: #768390; }
+
+        .note { background: #fff8c5; border-left: 5px solid #d4a72c; padding: 1rem; border-radius: 4px; margin: 1.5rem 0; font-size: 0.95rem; }
+
+        footer { text-align: center; padding: 3rem; color: #57606a; font-size: 0.9rem; }
+
+        @media (max-width: 600px) { .container { padding: 1.5rem; border-radius: 0; } h1 { font-size: 1.6rem; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo"><span>🐋</span> GEEK_DOCKER</a>
+        <div style="font-size: 0.8rem; color: #6e7781;">容器化技术入门</div>
+    </header>
+
+    <div class="container">
+        <div style="color: #6e7781; font-size: 0.9rem; margin-bottom: 0.5rem;">首页 / Linux 进阶 / Docker 教程</div>
+        <h1><span class="badge">小白篇</span> Docker 安装与卸载全教程</h1>
+        
+        <p>Docker 是目前全球最流行的容器引擎。它可以把你的程序及其依赖环境打包在一起，实现“一次构建，到处运行”。</p>
+
+        <h2>一、 安装前准备</h2>
+        <p>本教程适用于 <strong>Ubuntu / Debian / CentOS</strong> 等主流系统。请确保你的系统内核版本高于 3.10。</p>
+        <div class="terminal">
+            <span class="comment"># 检查内核版本</span><br>
+            <span class="cmd">uname</span> -r
+        </div>
+
+        <h2>二、 极简一键安装（推荐）</h2>
+        <p>对于小白用户，使用官方或国内镜像站提供的脚本是最简单的方案：</p>
+        
+        <div class="step-card">
+            <h3>方案 A：使用官方脚本（海外服务器）</h3>
+            <div class="terminal">
+                <span class="cmd">curl</span> -fsSL https://docker.com | bash -s docker
+            </div>
+            
+            <h3 style="margin-top:1.5rem;">方案 B：使用阿里镜像脚本（国内服务器）</h3>
+            <div class="terminal">
+                <span class="cmd">curl</span> -fsSL https://docker.com | bash -s docker --mirror Aliyun
+            </div>
+        </div>
+
+        <h2>三、 启动与验证</h2>
+        <p>安装完成后，需要手动启动 Docker 服务并设置为开机自启：</p>
+        <div class="terminal">
+            <span class="comment"># 启动 Docker</span><br>
+            <span class="cmd">sudo systemctl</span> start docker<br><br>
+            <span class="comment"># 设置开机自启</span><br>
+            <span class="cmd">sudo systemctl</span> enable docker<br><br>
+            <span class="comment"># 运行第一个容器测试</span><br>
+            <span class="cmd">sudo docker</span> run hello-world
+        </div>
+
+        <div class="note">
+            <strong>💡 镜像加速提示：</strong> 国内拉取镜像较慢，建议配置阿里云或腾讯云的镜像加速器，修改 <code>/etc/docker/daemon.json</code> 文件即可。
+        </div>
+
+        <h2>四、 彻底卸载 Docker</h2>
+        <p>如果你需要重新安装或不再需要 Docker，请按以下步骤彻底清理：</p>
+        
+        <div class="step-card">
+            <h3>1. 卸载程序包</h3>
+            <div class="terminal">
+                <span class="comment"># Ubuntu / Debian</span><br>
+                <span class="cmd">sudo apt-get</span> remove docker-ce docker-ce-cli containerd.io
+            </div>
+            
+            <h3 style="margin-top:1rem;">2. 删除残留文件（重要！）</h3>
+            <p style="font-size: 0.85rem; color: #cf222e; margin-bottom: 0.5rem;">注意：此操作会删除所有镜像和容器，请谨慎执行！</p>
+            <div class="terminal">
+                <span class="cmd">sudo rm</span> -rf /var/lib/docker<br>
+                <span class="cmd">sudo rm</span> -rf /var/lib/containerd
+            </div>
+        </div>
+
+        <h2>五、 常用管理命令</h2>
+        <ul>
+            <li><code>docker ps</code> - 查看运行中的容器</li>
+            <li><code>docker images</code> - 查看已下载的镜像</li>
+            <li><code>docker stop 容器ID</code> - 停止容器</li>
+        </ul>
+
+    </div>
+
+    <footer>
+        &copy; 2024 极客教程 - 愿你的容器永不宕机
+    </footer>
+
+</body>
+</html>
