@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UFW 防火墙配置教程 - 极客教程</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --code-bg: #1e293b;
+            --code-text: #f8fafc;
+            --text-dark: #1f2937;
+            --text-light: #4b5563;
+            --bg-light: #f8fafc;
+            --accent: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.7; color: var(--text-dark); background: #fff; }
+
+        /* 导航 */
+        header { padding: 1rem 5%; display: flex; justify-content: space-between; border-bottom: 1px solid #e5e7eb; }
+        .logo { font-weight: bold; color: var(--primary-color); text-decoration: none; font-size: 1.2rem; }
+
+        /* 主体内容 */
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1.5rem; }
+        .breadcrumb { font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem; }
+        
+        h1 { font-size: 2.2rem; margin-bottom: 1rem; color: #111827; }
+        .meta { font-size: 0.9rem; color: #9ca3af; margin-bottom: 2rem; }
+
+        .intro { background: #eff6ff; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary-color); margin-bottom: 2rem; }
+
+        h2 { margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #f1f5f9; }
+        
+        /* 代码块样式 */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.2rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        code { color: #eb5757; background: #fff5f5; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+        pre code { color: inherit; background: inherit; padding: 0; }
+
+        .step-num {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* 提示框 */
+        .warning { background: #fff7ed; border-left: 4px solid #f97316; padding: 1rem; margin: 1.5rem 0; border-radius: 4px; }
+
+        footer { text-align: center; padding: 4rem 0; color: #9ca3af; font-size: 0.9rem; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">极客教程</a>
+        <div style="font-size: 0.9rem; color: #6b7280;">Linux 服务器运维系列</div>
+    </header>
+
+    <article class="container">
+        <div class="breadcrumb">首页 / Linux 教程 / UFW 配置</div>
+        
+        <h1>Ubuntu/Debian 使用 UFW 配置防火墙详解</h1>
+        <div class="meta">发布日期：2024年5月 • 阅读时间：5分钟</div>
+
+        <p class="intro">
+            <strong>UFW (Uncomplicated Firewall)</strong> 是一个为了简化 iptables 配置而开发的防火墙工具。它是 Ubuntu 默认的防火墙配置工具，非常适合新手保护服务器安全。
+        </p>
+
+        <h2><span class="step-num">1</span> 检查 UFW 状态</h2>
+        <p>在开始之前，先检查防火墙是否已经开启：</p>
+        <pre><code>sudo ufw status verbose</code></pre>
+        <p>如果输出 <code>Status: inactive</code>，说明防火墙目前处于关闭状态。</p>
+
+        <h2><span class="step-num">2</span> 设置默认策略</h2>
+        <p>通常最安全的做法是：<strong>禁止所有入站规则，允许所有出站规则</strong>。</p>
+        <pre><code>sudo ufw default deny incoming
+sudo ufw default allow outgoing</code></pre>
+
+        <div class="warning">
+            <strong>⚠️ 极其重要：</strong> 在启用防火墙之前，请务必先允许 SSH 连接，否则你会被锁在服务器外面！
+        </div>
+
+        <h2><span class="step-num">3</span> 允许常用端口</h2>
+        <p>根据你的需求开启对应的服务端口：</p>
+        <pre><code># 允许 SSH (默认22端口)
+sudo ufw allow ssh
+
+# 允许 HTTP (80端口) 和 HTTPS (443端口)
+sudo ufw allow http
+sudo ufw allow https
+
+# 允许特定范围的端口 (如 3000 到 3100)
+sudo ufw allow 3000:3100/tcp</code></pre>
+
+        <h2><span class="step-num">4</span> 启用防火墙</h2>
+        <p>确认 SSH 已允许后，正式开启防火墙：</p>
+        <pre><code>sudo ufw enable</code></pre>
+        <p>系统会提示此操作可能会中断 SSH 连接，输入 <code>y</code> 继续即可。</p>
+
+        <h2><span class="step-num">5</span> 其他常用命令</h2>
+        <p>如果你需要删除某条规则或关闭防火墙：</p>
+        <pre><code># 删除规则 (例如删除允许 HTTP 的规则)
+sudo ufw delete allow http
+
+# 禁用防火墙
+sudo ufw disable
+
+# 重置所有规则
+sudo ufw reset</code></pre>
+
+    </article>
+
+    <footer>
+        &copy; 2024 极客教程 - 简单专业的 Linux 学习指南
+    </footer>
+
+</body>
+</html>
