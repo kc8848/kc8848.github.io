@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>s-ui 面板安装与配置全攻略 - 极客教程</title>
+    <style>
+        :root {
+            --primary: #f59e0b; /* 琥珀色，区别于 3x-ui 的紫色 */
+            --bg: #fafafa;
+            --code-bg: #1a1a1a;
+            --text-main: #262626;
+            --text-light: #737373;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.7; }
+
+        header { background: #fff; padding: 1rem 5%; border-bottom: 1px solid #e5e5e5; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { color: var(--primary); font-weight: bold; text-decoration: none; font-size: 1.1rem; letter-spacing: 1px; }
+
+        .container { max-width: 800px; margin: 2rem auto; background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e5e5; }
+        
+        .tag-info { background: #fffbeb; color: #b45309; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; display: inline-block; }
+        
+        h1 { font-size: 2rem; margin-bottom: 1rem; color: #171717; }
+        h2 { margin: 2.5rem 0 1rem; font-size: 1.4rem; color: #171717; border-bottom: 2px solid #f3f4f6; padding-bottom: 5px; }
+
+        /* 终端代码 */
+        .terminal { background: var(--code-bg); color: #d4d4d4; padding: 1.2rem; border-radius: 8px; font-family: 'Menlo', monospace; font-size: 0.9rem; margin: 1rem 0; overflow-x: auto; line-height: 1.5; }
+        .cmd-line::before { content: "$ "; color: var(--primary); }
+        .comment { color: #6b7280; font-style: italic; }
+
+        /* 步骤引导 */
+        .guide-box { background: #f8fafc; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border: 1px solid #f1f5f9; }
+        .guide-box h4 { margin-bottom: 0.8rem; color: #334155; }
+        
+        .warning-note { background: #fff7ed; border-left: 4px solid var(--primary); padding: 1rem; margin: 1.5rem 0; border-radius: 4px; font-size: 0.95rem; }
+
+        footer { text-align: center; padding: 4rem 0; color: #a3a3a3; font-size: 0.85rem; }
+
+        @media (max-width: 600px) { .container { padding: 1.5rem; border-radius: 0; border: none; } h1 { font-size: 1.6rem; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">GEEK_SUI</a>
+        <nav style="font-size: 0.8rem; color: var(--text-light);">轻量级面板教程</nav>
+    </header>
+
+    <main class="container">
+        <span class="tag-info">轻量化部署</span>
+        <h1>s-ui 面板小白全教程</h1>
+        
+        <p><strong>s-ui</strong> 是一款极其轻量、简洁的交互式管理面板。相比于功能繁杂的 3x-ui，s-ui 更加专注于核心功能的稳定性，非常适合配置较低的 VPS 服务器。</p>
+
+        <div class="warning-note">
+            <b>注意：</b> 安装前请确保你的系统防火墙已开放 <b>54321</b> 端口（这是 s-ui 的默认访问端口）。
+        </div>
+
+        <h2>一、 一键安装脚本</h2>
+        <p>在你的 SSH 终端粘贴以下命令：</p>
+        <div class="terminal">
+            <div class="comment"># 使用官方安装脚本</div>
+            <div class="cmd-line">bash &lt;(curl -Ls https://githubusercontent.com)</div>
+        </div>
+
+        <h2>二、 登录与初始化</h2>
+        <div class="guide-box">
+            <h4>默认信息：</h4>
+            <p>1. 浏览器访问：<code>http://服务器IP:54321</code></p>
+            <p>2. 初始用户名：<code>admin</code></p>
+            <p>3. 初始密码：<code>admin</code></p>
+        </div>
+        <p><strong>强烈建议：</strong> 登录后立即在面板设置中修改默认用户名、密码以及访问端口，以防被暴力破解。</p>
+
+        <h2>三、 常用快捷命令</h2>
+        <p>在 SSH 中输入 <code>s-ui</code> 即可调出功能菜单。常用子命令如下：</p>
+        <div class="terminal">
+            <div class="cmd-line">s-ui start    <span class="comment"># 启动面板</span></div>
+            <div class="cmd-line">s-ui stop     <span class="comment"># 停止面板</span></div>
+            <div class="cmd-line">s-ui restart  <span class="comment"># 重启面板</span></div>
+            <div class="cmd-line">s-ui status   <span class="comment"># 查看运行状态</span></div>
+        </div>
+
+        <h2>四、 面板设置建议</h2>
+        <ul style="padding-left: 1.5rem; margin-top: 1rem;">
+            <li><b>公钥与私钥：</b> 建议配合 SSL 证书开启 HTTPS 访问。</li>
+            <li><b>端口放行：</b> 如果配置了节点，记得在 UFW 防火墙中打开对应的节点端口。</li>
+            <li><b>版本更新：</b> 在 s-ui 菜单中选择更新功能，保持内核处于最新稳定版。</li>
+        </ul>
+
+        <h2>五、 彻底删除</h2>
+        <p>如果你想卸载 s-ui，只需在 SSH 中执行：</p>
+        <div class="terminal">
+            <div class="cmd-line">s-ui uninstall</div>
+        </div>
+        <p>该命令会自动停止面板服务并清理相关系统文件。</p>
+
+    </main>
+
+    <footer>
+        &copy; 2024 极客教程 - 简单而不简单的运维之道
+    </footer>
+
+</body>
+</html>
