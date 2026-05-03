@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bench.sh 服务器性能测试教程 - 极客教程</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --code-bg: #1e293b;
+            --code-text: #f8fafc;
+            --text-dark: #1f2937;
+            --text-light: #4b5563;
+            --accent-orange: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.7; color: var(--text-dark); background: #fcfcfc; }
+
+        header { padding: 1rem 5%; display: flex; justify-content: space-between; border-bottom: 1px solid #e5e7eb; background: #fff; }
+        .logo { font-weight: bold; color: var(--primary-color); text-decoration: none; font-size: 1.2rem; }
+
+        .container { max-width: 850px; margin: 2rem auto; padding: 0 1.5rem; }
+        .breadcrumb { font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem; }
+        
+        h1 { font-size: 2.2rem; margin-bottom: 1rem; color: #111827; letter-spacing: -0.5px; }
+        .meta-tags { margin-bottom: 2rem; }
+        .tag { background: #f1f5f9; color: #475569; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin-right: 0.5rem; }
+
+        .hero-box { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .hero-box h3 { color: var(--accent-orange); margin-bottom: 0.5rem; }
+
+        h2 { margin: 2.5rem 0 1rem; display: flex; align-items: center; }
+        h2::before { content: ""; display: inline-block; width: 4px; height: 24px; background: var(--primary-color); margin-right: 12px; border-radius: 2px; }
+
+        /* 终端仿真 */
+        .terminal { background: var(--code-bg); color: var(--code-text); padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0; font-family: 'Fira Code', monospace; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
+        .terminal .command { color: #10b981; font-weight: bold; }
+        .terminal .comment { color: #64748b; }
+
+        /* 参数表格 */
+        .param-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+        .param-table th { background: #f8fafc; text-align: left; padding: 12px; border-bottom: 2px solid #e2e8f0; }
+        .param-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+
+        .info-card { background: #fffbeb; border: 1px solid #fef3c7; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
+        
+        footer { text-align: center; padding: 4rem 0; color: #9ca3af; border-top: 1px solid #f1f5f9; margin-top: 4rem; }
+
+        @media (max-width: 600px) { h1 { font-size: 1.7rem; } .hero-box { padding: 1.2rem; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">极客教程</a>
+        <nav style="font-size: 0.9rem;">服务器测试系列</nav>
+    </header>
+
+    <article class="container">
+        <div class="breadcrumb">首页 / Linux 工具 / Bench.sh</div>
+        
+        <div class="meta-tags">
+            <span class="tag"># Linux运维</span>
+            <span class="tag"># 性能测试</span>
+            <span class="tag"># 脚本</span>
+        </div>
+
+        <h1>使用 Bench.sh 一键测试服务器性能</h1>
+
+        <div class="hero-box">
+            <h3>什么是 Bench.sh？</h3>
+            <p>由秋水逸冰（Teddysun）开发的经典脚本。它可以一键查看服务器的系统信息、测试全球主要节点的下载速度以及硬盘的 I/O 读写速度。是买到新 VPS 后的“必跑”项目。</p>
+        </div>
+
+        <h2>一、快速执行脚本</h2>
+        <p>你不需要下载任何文件，直接在终端复制并粘贴以下命令即可：</p>
+        
+        <div class="terminal">
+            <div class="comment"># 使用 wget 执行</div>
+            <div><span class="command">wget</span> -qO- bench.sh | bash</div>
+            <br>
+            <div class="comment"># 或者使用 curl 执行</div>
+            <div><span class="command">curl</span> -Lso- bench.sh | bash</div>
+        </div>
+
+        <h2>二、测试结果解读</h2>
+        <p>脚本运行结束后，你会看到三部分主要数据：</p>
+        
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th>区块</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>System Info</strong></td>
+                    <td>包含 CPU 型号、核心数、主频、内存、SWAP、运行时间及内核版本。</td>
+                </tr>
+                <tr>
+                    <td><strong>I/O Speed</strong></td>
+                    <td>硬盘读写速度。三次测试的平均值越高，代表你的硬盘性能越好（SSD通常在200MB/s以上）。</td>
+                </tr>
+                <tr>
+                    <td><strong>Node Name</strong></td>
+                    <td>包含全球各地的下载速度测试，关注 "Download Speed" 列。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>三、进阶参数</h2>
+        <p>如果你只想查看特定信息，可以使用参数：</p>
+        <div class="terminal">
+            <div class="comment"># 仅显示系统信息和 I/O 测试</div>
+            <div>wget -qO- bench.sh | bash -s info</div>
+        </div>
+
+        <div class="info-card">
+            <h4>💡 小贴士</h4>
+            <p>1. 建议在服务器负载较低时运行，以获得最准确的 I/O 和速度数据。<br>
+            2. 如果你的服务器在海外，国内节点的下载速度受线路（如 CN2 GIA）影响较大。</p>
+        </div>
+
+        <h2>四、常见问题</h2>
+        <p><strong>问：为什么提示命令未找到？</strong><br>
+        答：请先安装 wget 或 curl。例如在 Ubuntu 上执行 <code>sudo apt install wget -y</code>。</p>
+
+    </article>
+
+    <footer>
+        &copy; 2024 极客教程 - 让技术变得更简单
+    </footer>
+
+</body>
+</html>
