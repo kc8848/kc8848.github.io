@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux 命令大全集 - 极客教程</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --code-bg: #f1f5f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.6; }
+
+        /* 顶部搜索区 */
+        .header-sticky {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 1.5rem 5%;
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            text-align: center;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 1rem auto 0;
+            position: relative;
+        }
+
+        #commandSearch {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        /* 布局 */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+        
+        .category-section { margin-bottom: 3rem; }
+        .category-title { 
+            font-size: 1.4rem; 
+            margin-bottom: 1.5rem; 
+            display: flex; 
+            align-items: center;
+            color: var(--primary);
+        }
+        .category-title::after { content: ""; flex: 1; height: 1px; background: var(--border); margin-left: 15px; }
+
+        /* 命令卡片网格 */
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .command-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .command-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            border-color: var(--primary);
+        }
+
+        .cmd-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .cmd-desc { font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.8rem; }
+        
+        .cmd-example {
+            background: var(--code-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: 'Fira Code', monospace;
+            color: #475569;
+            border-left: 3px solid #cbd5e1;
+        }
+
+        /* 无搜索结果展示 */
+        #noResults { display: none; text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        footer { text-align: center; padding: 4rem 0; color: var(--text-muted); border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+    <div class="header-sticky">
+        <h1 style="font-size: 1.5rem;">Linux 命令速查大全</h1>
+        <div class="search-container">
+            <input type="text" id="commandSearch" placeholder="输入命令或功能关键字搜索 (如: 压缩, 网络, ls)...">
+        </div>
+    </div>
+
+    <main class="container">
+        <div id="noResults">未找到相关命令，请尝试其他关键词</div>
+
+        <!-- 文件操作 -->
+        <section class="category-section">
+            <h2 class="category-title">文件与目录操作</h2>
+            <div class="command-grid">
+                <div class="command-card" data-keyword="ls 列表 文件 目录">
+                    <span class="cmd-name">ls</span>
+                    <p class="cmd-desc">列出目录内容</p>
+                    <div class="cmd-example">ls -lah</div>
+                </div>
+                <div class="command-card" data-keyword="cd 切换目录 路径">
+                    <span class="cmd-name">cd</span>
+                    <p class="cmd-desc">切换当前工作目录</p>
+                    <div class="cmd-example">cd /var/www</div>
+                </div>
+                <div class="command-card" data-keyword="cp 复制 拷贝 file">
+                    <span class="cmd-name">cp</span>
+                    <p class="cmd-desc">复制文件或目录</p>
+                    <div class="cmd-example">cp source.txt dest.txt</div>
+                </div>
+                <div class="command-card" data-keyword="rm 删除 移除 delete">
+                    <span class="cmd-name">rm</span>
+                    <p class="cmd-desc">删除文件或目录 (慎用)</p>
+                    <div class="cmd-example">rm -rf ./temp_dir</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 网络工具 -->
+        <section class="category-section">
+            <h2 class="category-title">网络与通信</h2>
+            <div class="command-grid">
+                <div class="command-card" data-keyword="ping 网络 连通性">
+                    <span class="cmd-name">ping</span>
+                    <p class="cmd-desc">测试远程主机的连通性</p>
+                    <div class="cmd-example">ping google.com</div>
+                </div>
+                <div class="command-card" data-keyword="netstat 端口 网络状态 connection">
+                    <span class="cmd-name">netstat</span>
+                    <p class="cmd-desc">显示网络连接、路由表等信息</p>
+                    <div class="cmd-example">netstat -tunlp</div>
+                </div>
+                <div class="command-card" data-keyword="curl 网页 下载 请求">
+                    <span class="cmd-name">curl</span>
+                    <p class="cmd-desc">传输数据工具，支持多种协议</p>
+                    <div class="cmd-example">curl -I https://baidu.com</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 系统管理 -->
+        <section class="category-section">
+            <h2 class="category-title">系统与进程管理</h2>
+            <div class="command-grid">
+                <div class="command-card" data-keyword="top 进程 资源 监控 cpu">
+                    <span class="cmd-name">top</span>
+                    <p class="cmd-desc">实时显示系统中各个进程的资源占用</p>
+                    <div class="cmd-example">top</div>
+                </div>
+                <div class="command-card" data-keyword="df 磁盘 空间 disk">
+                    <span class="cmd-name">df</span>
+                    <p class="cmd-desc">查看磁盘空间使用情况</p>
+                    <div class="cmd-example">df -h</div>
+                </div>
+                <div class="command-card" data-keyword="chmod 权限 属性 mode">
+                    <span class="cmd-name">chmod</span>
+                    <p class="cmd-desc">修改文件或目录的访问权限</p>
+                    <div class="cmd-example">chmod 755 script.sh</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2024 极客教程 - Linux 指令实验室
+    </footer>
+
+    <script>
+        const searchInput = document.getElementById('commandSearch');
+        const cards = document.querySelectorAll('.command-card');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            let hasVisible = false;
+
+            cards.forEach(card => {
+                const keywords = card.getAttribute('data-keyword').toLowerCase();
+                const cmdName = card.querySelector('.cmd-name').textContent.toLowerCase();
+                
+                if (keywords.includes(query) || cmdName.includes(query)) {
+                    card.style.display = 'block';
+                    hasVisible = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // 控制分类标题的显示隐藏（简单逻辑：如果没结果则隐藏）
+            document.querySelectorAll('.category-section').forEach(sec => {
+                const visibleInSec = sec.querySelectorAll('.command-card[style="display: block;"]');
+                sec.style.display = (visibleInSec.length > 0 || query === "") ? 'block' : 'none';
+            });
+
+            noResults.style.display = hasVisible ? 'none' : 'block';
+        });
+    </script>
+</body>
+</html>
